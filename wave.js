@@ -1,4 +1,4 @@
-let contentUrl = "http://en.wikipedia.org/w/api.php?&action=parse&prop=wikitext&format=json&page=Internet&origin=*";
+let contentUrl = "https://en.wikipedia.org/w/api.php?&action=parse&prop=wikitext&format=json&page=Internet&origin=*";
 
 let textElements;
 let elementIndices;
