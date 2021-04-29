@@ -243,9 +243,9 @@ export class MSDFRenderer {
         attribute vec2 vTexCoord;
 
         // Font variation
-        uniform vec4 color;
-        uniform float size;
-        uniform float weight;
+        //uniform vec4 color;
+        //uniform float size;
+        //uniform float weight;
 
         // View properties
         uniform mat4 proj;
