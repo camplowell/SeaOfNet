@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <style>
+        @keyframes wave {
+            from { transform: rotate(0deg) translateX(8px) rotate(0deg); }
+            to   { transform: rotate(-360deg) translateX(8px) rotate(360deg); }
+        }
+
+        .waving {
+            animation-name: wave;
+            animation-duration: 2s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            transition: 1s ease;
+        }
+
+        span {
+            display: inline-block;
+            margin: 0px;
+            padding:0px;
+            border: 0px;
+            width: 30px;
+            height:30px;
+        }
+
+        body {
+            background-color: black;
+            color: gray;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <div id = "content">
+    </div>
+
+    <script id='script' src = "wave.js"></script>
+</body>

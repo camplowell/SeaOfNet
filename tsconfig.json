@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "amd",
+        "moduleResolution": "node",
+        "outDir": "out", //put transpiled JS files in this folder
+        "sourceMap": true, //generate source map for debugging (stepping through)
+        "baseUrl": "./src", //this is the base URL for all relative paths that follow
+    },
+    "include": [ //include all files in this folder for transpiling
+        "src/**/*"
+    ],
+    "exclude": [ //do not include files in these folders
+        "node_modules", //this is where NPM has installed all packages, don't bother transpiling
+        "**/*.spec.ts"
+    ],
+    "lib": [ //any libraries
+        "es2016",
+        "dom",
+        "es5"
+    ]
+}
