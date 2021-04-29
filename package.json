@@ -1,18 +1,26 @@
 {
-    "name": "seaofnet",
-    "version": "1.0.0",
-    "description": "This program shows how to draw a simple quad on the screen using WebGL",
-    "main": "SeaOfNet.js",
-    "directories": {
-        "doc": "docs"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "http-server": "^0.11.1"
-    }
+  "name": "seaofnet",
+  "version": "1.0.0",
+  "description": "This program shows how to draw a simple quad on the screen using WebGL",
+  "main": "SeaOfNet.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camplowell/SeaOfNet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/camplowell/SeaOfNet/issues"
+  },
+  "homepage": "https://github.com/camplowell/SeaOfNet#readme"
 }
