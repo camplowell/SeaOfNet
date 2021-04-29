@@ -4,6 +4,8 @@ import * as WebGLUtils from "./WebGLUtils"
 var view: View;
 var canvas: HTMLCanvasElement;
 
+const textSource: string = "https://en.wikipedia.org/w/api.php?&action=parse&prop=text&format=json&page=Internet&origin=*";
+
 /**
  * This is the main function of our web application. This function is called at the end of this file. In the HTML file, this script is loaded in the head so that this function is run.
  */
@@ -31,7 +33,7 @@ function main(): void {
 
 
     //initialize the view, and pass the shader sources to the view
-    view.init("fonts/FiraCode-VF", "http://en.wikipedia.org/w/api.php?&action=parse&prop=text&format=json&page=Internet&origin=*");
+    view.init("fonts/FiraCode-VF", textSource);
 
     //draw the view. You must call draw *each time* you would like to draw the screen (i.e. there is no auto refresh)
     window.requestAnimationFrame(animate);
