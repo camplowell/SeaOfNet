@@ -251,7 +251,7 @@ export class MSDFRenderer {
         uniform mat4 proj;
         uniform mat4 modelView;
         uniform mat4 vUv;
-        uniform float slope;
+        //uniform float slope;
 
         // Fragment properties
         varying vec2 fTexCoord;
