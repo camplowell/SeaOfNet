@@ -1,20 +1,24 @@
 import * as WebGLUtils from "./WebGLUtils";
 import { mat4, vec3, vec4 } from "gl-matrix";
 
+const bytesPerFloat = 4;
+
 export class MSDFRenderer {
     private gl: WebGLRenderingContext;
     private shader: WebGLShader;
     private numVertices: number;
-    private ready: boolean;
+    public ready: boolean;
 
     private proj: mat4;
 
+    private vbuffer: WebGLBuffer;
     private fontAtlas: WebGLTexture;
     private charProps: Map<String, CharProperties>;
     private dfSlope: number;
 
     private locations: Locations;
-
+    private positionLocation: number;
+    private uvLocation: number;
 
     constructor(gl: WebGLRenderingContext) {
         this.gl = gl;
@@ -39,33 +43,30 @@ export class MSDFRenderer {
         //enable the current program
         this.gl.useProgram(this.shader);
 
-
-        //A vertex buffer object used to store the vertex data for rendering
-        let vbo: WebGLBuffer;
         //create a vertex buffer object
-        vbo = this.gl.createBuffer();
+        this.vbuffer = this.gl.createBuffer();
         //bind the buffer to GL_ARRAY_BUFFER
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vbo);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vbuffer);
         //copy over the vertex data
         this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW);
 
         //get the location of the vPosition attribute in the shader program
-        let positionLocation: number = this.gl.getAttribLocation(this.shader, "vPosition");
-        let uvLocation: number = this.gl.getAttribLocation(this.shader, "vTexCoord");
+        this.positionLocation = this.gl.getAttribLocation(this.shader, "vPosition");
+        this.uvLocation = this.gl.getAttribLocation(this.shader, "vTexCoord");
         let bytesPerFloat: number = 4;
 
         //tell webgl that the position attribute can be found as 2-floats-per-vertex with a gap of 20 bytes 
         //(2 floats per position, 2 floats per uv coordinate = 4 floats = 16 bytes
-        this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 0);
+        this.gl.vertexAttribPointer(this.positionLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 0);
         //tell webgl to enable this vertex attribute array, so that when it draws it will use this
-        this.gl.enableVertexAttribArray(positionLocation);
+        this.gl.enableVertexAttribArray(this.positionLocation);
 
 
         //tell webgl that the uv attribute can be found as 2-floats-per-vertex with a gap of 20 bytes 
         //(2 floats per position, 2 floats per uv coordinate = 4 floats = 16 bytes
-        this.gl.vertexAttribPointer(uvLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 2 * bytesPerFloat);
+        this.gl.vertexAttribPointer(this.uvLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 2 * bytesPerFloat);
         //tell webgl to enable this vertex attribute array, so that when it draws it will use this
-        this.gl.enableVertexAttribArray(uvLocation);
+        this.gl.enableVertexAttribArray(this.uvLocation);
 
         this.locations = <Locations>{};
         this.locations.color = this.gl.getUniformLocation(this.shader, "color");
@@ -177,11 +178,26 @@ export class MSDFRenderer {
         }
         // Unrecognized character
         if(!this.charProps.get(char)) {
-            console.log("Unrecognized character: ", char);
+            console.log(`Unrecognized character: <${char}>`);
             return;
         }
 
         this.gl.useProgram(this.shader);
+
+        //bind the buffer to GL_ARRAY_BUFFER
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vbuffer);
+        //tell webgl that the position attribute can be found as 2-floats-per-vertex with a gap of 20 bytes 
+        //(2 floats per position, 2 floats per uv coordinate = 4 floats = 16 bytes
+        this.gl.vertexAttribPointer(this.positionLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 0);
+        //tell webgl to enable this vertex attribute array, so that when it draws it will use this
+        this.gl.enableVertexAttribArray(this.positionLocation);
+
+
+        //tell webgl that the uv attribute can be found as 2-floats-per-vertex with a gap of 20 bytes 
+        //(2 floats per position, 2 floats per uv coordinate = 4 floats = 16 bytes
+        this.gl.vertexAttribPointer(this.uvLocation, 2, this.gl.FLOAT, false, 4 * bytesPerFloat, 2 * bytesPerFloat);
+        //tell webgl to enable this vertex attribute array, so that when it draws it will use this
+        this.gl.enableVertexAttribArray(this.uvLocation);
 
         this.gl.uniform4fv(this.locations.color, this.toColor(color));
         this.gl.uniform1f(this.locations.size, size);
@@ -282,9 +298,9 @@ export class MSDFRenderer {
         {
             vec4 texColor = texture2D(font, fTexCoord);
             float sigDist = median(texColor.r, texColor.g, texColor.b);
-            float alpha = smoothstep(weight - slope, weight + slope, sigDist);
+            float alpha = smoothstep(max(weight - slope, 0.0), min(weight + slope, 1.0), sigDist);
             if (alpha < 0.001) discard;
-            gl_FragColor = vec4(color.rgb * alpha, 1);
+            gl_FragColor = vec4(color.rgb, alpha);
             //gl_FragColor = vec4(1, 0, 1, 1);
         }
         `;

@@ -1,5 +1,6 @@
 /// <reference path="SeaOfNet.ts" />
 
+import { BGRenderer } from "./BGRenderer";
 import { MSDFRenderer } from "./MSDFRenderer";
 
 // Grid parameters
@@ -36,6 +37,7 @@ export class View {
     private mouseY: number;
 
     private fontRenderer: MSDFRenderer;
+    private bgrenderer: BGRenderer;
     private text: string;
     private indices: number[];
 
@@ -43,6 +45,7 @@ export class View {
         this.gl = gl;
         this.canvas = canvas;
         this.fontRenderer = new MSDFRenderer(gl);
+        this.bgrenderer = new BGRenderer(gl, mRadY * gridSize);
         this.onResize(canvas.clientWidth, canvas.clientHeight);
     }
 
@@ -96,10 +99,12 @@ export class View {
         this.gl.viewport(0, 0, this.width, this.height);
         //clear the window
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+        this.bgrenderer.draw(this.mouseX, this.height - this.mouseY, this.time);
         // Update the timer in seconds
         this.time = performance.now() / 1000.0;
 
-        if (this.text) {
+        if (this.text && this.fontRenderer.ready) {
             this.drawString(this.text, this.indices);
         } else {
             this.drawString("Loading...");

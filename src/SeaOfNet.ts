@@ -19,7 +19,11 @@ function main(): void {
     }
 
     //get the rendering context for webgl
-    let gl: WebGLRenderingContext = WebGLUtils.setupWebGL(canvas, { 'antialias': false, 'alpha': false, 'depth': false, 'stencil': false });
+    let gl: WebGLRenderingContext = WebGLUtils.setupWebGL(canvas, { antialias: false, alpha: false, depth: false, stencil: false });
+
+    // Enable alpha blending
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     // Only continue if WebGL is available and working
     if (gl == null) {
